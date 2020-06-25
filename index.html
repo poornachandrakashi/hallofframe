@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>The hall of fame</title>
+
+    <link rel="stylesheet" href="main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous">
+    </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
+    </script>
+    <script src="https://rawgit.com/bassjobsen/Bootstrap-3-Typeahead/master/bootstrap3-typeahead.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js">
+    </script>
+    <style>
+        html {
+            background-color: rgba( 200, 200, 250, 0.3);
+        }
+        
+        body {
+            padding-top: 120px;
+            background-color: rgba( 200, 200, 250, 0.3);
+        }
+        
+        #page-container {
+            background-color: rgba( 200, 200, 250, 0.3);
+        }
+        
+        .item {
+            height: 150px;
+            border-radius: 5px;
+            border: 1px solid rgba( 200, 200, 200, 0.6);
+            margin: 15px;
+            overflow: auto;
+            background-color: rgba( 175, 175, 175, 0.9);
+            background-size: 100% 100%;
+            background-blend-mode: overlay;
+            text-align: center;
+        }
+        
+        .card img {
+            width: 100%;
+            heigh: 25%;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- This is not real code for the moment, as of today (10.03.2017) I`ll be collecting here the names of all who defeated me in a challenge, together with the details - weapon and score. -->
+    <!-- once I get 10-15 names on the list I`ll figure out a cool way to display them :) (please leave a comment if you can suggest one) -->
+    <!--The background behind this are the discussions about if I am being defeated, think it`s cool to display the names of the players who actualy did. -->
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <span class="navbar-brand">The Hall of fame</span>
+            </div>
+            <form class="navbar-form navbar-left">
+                <div class="input-group">
+                    <div class="input-group-btn search-panel">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span id="search_concept">Filter by</span> <span class="caret"></span>
+                    </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#none">No filter</a></li>
+                            <li><a href="#lang">No's of Contribututions</a></li>
+                            <li><a href="#name">Contributers name</a></li>
+                        </ul>
+                    </div>
+
+                    <input type="hidden" name="search_param" value="all" id="search_param">
+                    <input id="search-phrase-input" type="text" class="form-control" data-provide="typeahead" disabled="true">
+                    <span class="input-group-btn">
+                    <button id="btn-search" class="btn btn-default" type="button" disabled="true">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                    </span>
+                </div>
+            </form>
+        </div>
+    </nav>
+
+    <div id="page-container" class="container">
+
+    </div>
+
+    <script id="items-template" type="text/x-handlebars-template">
+        <div class="row">
+            {{#each items}}
+            <div class="col-xs-5 item" style="background-image: url({{imageSource}})">
+                <div class="card">
+                    <div class="card-block">
+                        <h3 class="card-title">{{name}}</h3>
+                        <p class="card-text">Have contributed <strong>{{score}}</strong> data entries on {{date}}</p>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </script>
+
+    <script id="pagination-template" type="text/x-handlebars-template">
+        <ul class="pager">
+            <li class="prev-btn"><a href="#">&larr; Previous</a></li>
+            <li class="next-btn"><a href="#">Next &rarr;</a></li>
+        </ul>
+    </script>
+
+    <ul id="data-container">
+        <li>
+            <span>Navya T</span>
+            <span>Oxford</span>
+            <span>15</span>
+            <span>25.06.2020</span>
+        </li>
+        <li>
+            <span>Sushma</span>
+            <span>Oxford</span>
+            <span>30</span>
+            <span>25.06.2020</span>
+        </li>
+        <li>
+            <span>Likith</span>
+            <span>Oxford</span>
+            <span>40</span>
+            <span>25.06.2020</span>
+        </li>
+        <li>
+            <span>Pankaj G</span>
+            <span>Oxford</span>
+            <span>0</span>
+            <span>25.06.2020</span>
+        </li>
+        <li>
+            <span>Harshvardhan</span>
+            <span>Oxford</span>
+            <span>50</span>
+            <span>25.06.2020</span>
+        </li>
+        <li>
+            <span>Poornachandra Kashi</span>
+            <span>Oxford</span>
+            <span>30</span>
+            <span>25.06.2020</span>
+        </li>
+    </ul>
+
+    <!--    <li>-->
+    <!--        <span>Michael Foster</span>-->
+    <!--        <span>Java</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>12.03.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Aleksandr Karev</span>-->
+    <!--        <span>Java</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>17.03.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Shawn Kyle</span>-->
+    <!--        <span>Java</span>-->
+    <!--        <span>4:3</span>-->
+    <!--        <span>20.03.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Puspal Ghosh</span>-->
+    <!--        <span>Java</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>20.03.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Mø Fathi</span>-->
+    <!--        <span>Java</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>21.03.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Mø Fathi</span>-->
+    <!--        <span>Java</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>21.03.2017</span>-->
+    <!--    <li>-->
+    <!--        <span>Ernaso Kerbizi</span>-->
+    <!--        <span>Java</span>-->
+    <!--        <span>4:3</span>-->
+    <!--        <span>22.03.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Aditi</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>27.03.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Samriddhi Bali</span>-->
+    <!--        <span>Java</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>29.03.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>André Santos</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>30.03.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Mayank Jain</span>-->
+    <!--        <span>Java</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>01.04.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>D.Krueger</span>-->
+    <!--        <span>Java</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>03.04.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Nizar GANNOUNI</span>-->
+    <!--        <span>Java</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>05.04.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Christopher Sabb</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>06.04.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Yunus Ibn Ahmed</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>13.04.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span> [can't type the name, please post yourself in comments so that I can copy/paste it ]</span>-->
+    <!--        <span>Java</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>16.04.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Haileyesus Shitalem</span>-->
+    <!--        <span>Java</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>16.04.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>SuspiciousUser</span>-->
+    <!--        <span>Java</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>19.04.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Kuba Dziarkowski</span>-->
+    <!--        <span>Java</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>19.04.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>jopeppes</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>29.04.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Pnm</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>03.05.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Amanda Dantas</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>04.05.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Aibek Toroev</span>-->
+    <!--        <span>C#</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>05.05.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span> [can't type the name, please post yourself in comments so that I can copy/paste it ]</span>-->
+    <!--        <span>PHP</span>-->
+    <!--        <span>3:4</span>-->
+    <!--        <span>10.05.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Michael Foster</span>-->
+    <!--        <span>PHP</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>12.05.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Wisdom Abioye</span>-->
+    <!--        <span>PHP</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>12.05.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>siyan</span>-->
+    <!--        <span>PHP</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>13.05.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Askam Ostraca</span>-->
+    <!--        <span>C#</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>13.05.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>xCalifier</span>-->
+    <!--        <span>PHP</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>13.05.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Terminator (Follow me please)</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>14.05.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>milan</span>-->
+    <!--        <span>PHP</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>19.05.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Biraj Patel</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>19.05.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Mivsher Desdemona</span>-->
+    <!--        <span>C#</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>22.05.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Andrew Kharchenko</span>-->
+    <!--        <span>PHP</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>22.05.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Yazdan Hamidi</span>-->
+    <!--        <span>PHP</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>25.05.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Loc Nguyen</span>-->
+    <!--        <span>PHP</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>01.06.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>RBaav</span>-->
+    <!--        <span>PHP</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>01.06.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Rifat Hasan</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>06.06.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>marlon</span>-->
+    <!--        <span>PHP</span>-->
+    <!--        <span>1:4</span>-->
+    <!--        <span>08.06.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>___</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>10.06.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Dave Ryan</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>12.06.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Benzics Will</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>16.06.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Mohamed Ibrahim</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>16.06.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>quang Nguyen</span>-->
+    <!--        <span>C#</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>18.06.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>TMS SHANU</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>26.06.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>GAWEN STEASY</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>26.06.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>GAWEN STEASY</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>26.06.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Immortal</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>26.06.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Prudhvi Raaj</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>26.06.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Q M A M</span>-->
+    <!--        <span>PHP</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>28.06.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>smaznet</span>-->
+    <!--        <span>C#</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>28.06.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Quang Nguyen</span>-->
+    <!--        <span>C#</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>30.06.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Burhan Ilhan</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>03.07.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Daniel Fernández Hidalgo</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>03.07.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Oleg Chulanovskyi</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>04.07.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Oleg Chulanovskyi</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>08.07.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Mugfirfauzy Siregar</span>-->
+    <!--        <span>PHP</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>10.07.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>G.Kasperski</span>-->
+    <!--        <span>PHP</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>12.07.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Francesco Ventura</span>-->
+    <!--        <span>C#</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>14.07.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Oleg Chulanovskyi</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>15.07.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Kostya</span>-->
+    <!--        <span>PHP</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>15.07.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Krishna Teja Yeluripati</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>05.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Krishna Teja Yeluripati</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>5:3</span>-->
+    <!--        <span>05.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Krishna Teja Yeluripati</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>05.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>GAWEN STEASY</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>05.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Ma Om</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>05.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Azat Kaymov</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>06.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>4rontender</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>06.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>ChessMaster</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>06.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Lyubov Yefremova</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>07.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Erjon Zenelaj</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>08.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Pegasus</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>09.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Dmitry</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>4:3</span>-->
+    <!--        <span>11.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Zizheng Ye</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>11.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Bie</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>11.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>tamas</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>11.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>ophid1an</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>11.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Pegasus</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>12.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>shubham borghare</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>12.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Cristian Saluga</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>13.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>c. mechain</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>13.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Dmitry</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>13.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Ivan Jovkovic</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>14.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Said BAHAOUARY</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>14.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>kirijuk</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>14.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Avinash Thakur</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>14.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Дмитрий Христич</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>14.08.2017</span>-->
+    <!--    </li>    -->
+    <!--    <li>-->
+    <!--        <span>kirijuk</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>15.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Andriy Burlaka</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>15.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Mohamed Abdel Fattah Radwan</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>16.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Ma Om</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>16.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>kirijuk</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>16.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Andrej Kharchenko</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>4:3</span>-->
+    <!--        <span>16.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Pegasus</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>17.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Bernard Sovdat</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>18.08.2017</span>-->
+    <!--    </li>    -->
+    <!--    <li>-->
+    <!--        <span>Bartłomiej Żuber</span>-->
+    <!--        <span>C#</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>19.08.2017</span>-->
+    <!--    </li>    -->
+    <!--    <li>-->
+    <!--        <span>Armen Vardanyan</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>19.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Qanshaw Avgana</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>4:3</span>-->
+    <!--        <span>19.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Pit Friedrich</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>19.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Pegasus</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>19.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Haris Zaharakis</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>21.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>kamakshi</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>22.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Joshua Seitz</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>4:3</span>-->
+    <!--        <span>23.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Lap Xuan Dao</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>24.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>saltun</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>26.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Lap Xuan Dao</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>31.08.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Toukou Habi Aboubacar</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>01.09.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Chirag Ghosh</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>02.09.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>CrisM</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>05.09.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Shane</span>-->
+    <!--        <span>C#</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>08.09.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Ansam</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>16.09.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Sergey Saenko</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>16.09.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>keti gujejiani</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>19.09.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Javascript jQuery</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>23.09.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Eman Mohamed</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>25.09.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Siddharth Kumar Gupta</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>27.09.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Joshua</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>28.09.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Andrew Ting Mai Zau</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>29.09.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Qanshaw Avgana</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>30.09.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Adrian Velazquez</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>05.10.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Javier Evans</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>06.10.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Advadis Sagitarius</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>06.10.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Spiderman</span>-->
+    <!--        <span>C#</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>12.10.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Spiderman</span>-->
+    <!--        <span>C#</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>12.10.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Kash</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>13.10.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Eric D'Andria</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>18.10.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>4rontender</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>22.10.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>May Thet</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>25.10.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Prashant Bhushan Shukla</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>26.10.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Louis-Philippe Lebrun</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>26.10.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Solzy</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>28.10.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Eligijus Silkartas</span>-->
+    <!--        <span>Ruby</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>28.10.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Vitaly Angelov (Rostov-on-Don)</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>28.10.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>anndroid</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>01.11.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Shubhanshu</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>05.11.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Abhay Kumar Singh</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>05.11.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Said BAHAOUARY</span>-->
+    <!--        <span>HTML</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>06.11.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Aymen ELARBI</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>4:3</span>-->
+    <!--        <span>06.11.2017</span>-->
+    <!--    </li>-->
+    <!--    <li>-->
+    <!--        <span>Qanshaw Avgana</span>-->
+    <!--        <span>JS</span>-->
+    <!--        <span>5:4</span>-->
+    <!--        <span>07.11.2017</span>-->
+    <!--    </li>-->
+
+    <!--</ul>-->
+
+    <script>
+        'use strict';
+
+        var _createClass = function() {
+            function defineProperties(target, props) {
+                for (var i = 0; i < props.length; i++) {
+                    var descriptor = props[i];
+                    descriptor.enumerable = descriptor.enumerable || false;
+                    descriptor.configurable = true;
+                    if ("value" in descriptor) descriptor.writable = true;
+                    Object.defineProperty(target, descriptor.key, descriptor);
+                }
+            }
+            return function(Constructor, protoProps, staticProps) {
+                if (protoProps) defineProperties(Constructor.prototype, protoProps);
+                if (staticProps) defineProperties(Constructor, staticProps);
+                return Constructor;
+            };
+        }();
+
+        function _classCallCheck(instance, Constructor) {
+            if (!(instance instanceof Constructor)) {
+                throw new TypeError("Cannot call a class as a function");
+            }
+        }
+
+        var db = void 0,
+            pageSource = void 0,
+            pageTemplate = void 0,
+            paginationSource = void 0,
+            paginationTemplate = void 0,
+            page = void 0;
+
+        var logos = {
+            'C#': '1080',
+            'JS': '1024',
+            'C++': '1051',
+            'Java': '1068',
+            'HTML': '1014',
+            'PHP': '1059',
+            'Ruby': '1081',
+            'Python': '1073'
+        };
+
+        var parseElement = function parseElement(element) {
+            var raw = [];
+            $(element).children().each(function(index, span) {
+                raw.push($(span).text());
+            });
+            return {
+                name: raw[0],
+                lang: raw[1],
+                score: raw[2],
+                date: raw[3],
+                imageSource: 'https://www.sololearn.com/Icons/Courses/' + logos[raw[1]] + '.png'
+            };
+        };
+
+        var DataBase = function() {
+            function DataBase(dataContainer) {
+                var _this = this;
+
+                _classCallCheck(this, DataBase);
+
+                this._rawdata = [];
+                this._data = [];
+                this._pageSize = 6;
+                this._currentPage = 1;
+                $('#' + dataContainer + ' li').each(function(index, li) {
+                    _this._rawdata.push(parseElement(li));
+                });
+                $('#' + dataContainer).remove();
+                this._data = this._rawdata.slice();
+            }
+
+            _createClass(DataBase, [{
+                key: 'getPropValues',
+                value: function getPropValues(prop) {
+                    var uniqueValues = [];
+                    return this._rawdata.map(function(data) {
+                        return data[prop];
+                    }).filter(function(data) {
+                        if (uniqueValues.indexOf(data) === -1) {
+                            uniqueValues.push(data);
+                            return true;
+                        }
+                        return false;
+                    });
+                }
+            }, {
+                key: 'filter',
+                value: function filter(_ref) {
+                    var _this2 = this;
+
+                    var lang = _ref.lang,
+                        name = _ref.name;
+
+                    if (!(lang || name)) {
+                        this._data = this._rawdata.slice();
+                        return this;
+                    }
+                    lang = lang || '';
+                    name = name || '';
+
+                    this._data.length = 0;
+                    this._rawdata.forEach(function(item) {
+                        var test = item.lang.toLowerCase().indexOf(lang.toLowerCase()) !== -1 && item.name.toLowerCase().indexOf(name.toLowerCase()) !== -1;
+                        if (test) {
+                            _this2._data.push(item);
+                        }
+                    });
+                    this._currentPage = 1;
+                    return this;
+                }
+            }, {
+                key: 'getPage',
+                value: function getPage(pageNumber) {
+                    var first = (pageNumber - 1) * this._pageSize;
+                    return this._data.slice(first, first + this._pageSize);
+                }
+            }, {
+                key: 'getCurrentPage',
+                value: function getCurrentPage() {
+                    return this.getPage(this.currentPage);
+                }
+            }, {
+                key: 'getPreviousPage',
+                value: function getPreviousPage() {
+                    if (this.currentPage > 1) {
+                        this._currentPage -= 1;
+                    }
+                    return this.getCurrentPage();
+                }
+            }, {
+                key: 'getNextPage',
+                value: function getNextPage() {
+                    if (this.currentPage < this.pageCount) {
+                        this._currentPage += 1;
+                    }
+                    return this.getCurrentPage();
+                }
+            }, {
+                key: 'currentPage',
+                get: function get() {
+                    return this._currentPage;
+                }
+            }, {
+                key: 'items',
+                get: function get() {
+                    return this._data.slice();
+                }
+            }, {
+                key: 'pageCount',
+                get: function get() {
+                    return Math.ceil(this._data.length / this._pageSize);
+                }
+            }, {
+                key: 'pageSize',
+                set: function set(value) {
+                    this._pageSize = value;
+                }
+            }]);
+
+            return DataBase;
+        }();
+
+        var dropDownClick = function dropDownClick(e) {
+            e.preventDefault();
+            $('#btn-search').prop('disabled', false);
+
+            var param = $(this).attr("href").replace("#", "");
+            var concept = $(this).text();
+            $('.search-panel span#search_concept').text(concept);
+            $('.input-group #search_param').val(param);
+
+            if (param === 'none') {
+                $('#search-phrase-input').val('').prop('disabled', true);
+                return;
+            }
+
+            $('#search-phrase-input').prop('disabled', false);
+            var sourceValues = db.getPropValues(param);
+            $('#search-phrase-input').val('').typeahead('destroy').typeahead({
+                source: sourceValues
+            });
+        };
+
+        var setVisibility = function setVisibility() {
+            if (db.currentPage === 1) {
+                $('.pager .prev-btn').css('visibility', 'hidden');
+            } else {
+                $('.pager .prev-btn').css('visibility', 'visible');
+            }
+            if (db.currentPage === db.pageCount) {
+                $('.pager .next-btn').css('visibility', 'hidden');
+            } else {
+                $('.pager .next-btn').css('visibility', 'visible');
+            }
+        };
+
+        var buildHTML = function buildHTML(items) {
+            var pagination = paginationTemplate({});
+            page.html(pagination);
+
+            var html = pageTemplate({
+                items: items
+            });
+            page.append(html);
+
+            page.append(pagination);
+
+            setVisibility();
+            $('.pager .prev-btn').click(previousClick);
+            $('.pager .next-btn').click(nextClick);
+        };
+
+        var nextClick = function nextClick(e) {
+            var items = db.getNextPage();
+
+            buildHTML(items);
+        };
+
+        var previousClick = function previousClick(e) {
+            var items = db.getPreviousPage();
+
+            buildHTML(items);
+        };
+
+        var searchClick = function searchClick(e) {
+            e.preventDefault();
+            var filter = {};
+            var param = $('.input-group #search_param').val();
+            var value = $('#search-phrase-input').val();
+
+            if (param !== 'none') {
+                filter[param] = value;
+            }
+
+            var items = db.filter(filter).getCurrentPage();
+
+            buildHTML(items);
+        };
+
+        window.onload = function() {
+            db = new DataBase('data-container');
+            pageSource = $("#items-template").html();
+            pageTemplate = Handlebars.compile(pageSource);
+            paginationSource = $("#pagination-template").html();
+            paginationTemplate = Handlebars.compile(paginationSource);
+            page = $('#page-container');
+
+            $('.search-panel .dropdown-menu').find('a').click(dropDownClick);
+
+            $('#btn-search').click(searchClick);
+
+            var items = db.getCurrentPage();
+            buildHTML(items);
+
+        };
+
+        //# sourceMappingURL=script-compiled.js.map
+    </script>
+</body>
+
+</html>
